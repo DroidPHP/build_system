@@ -1,0 +1,20 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://ftp.gnu.org/pub/gnu/libiconv/libiconv-$ICONV_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv libiconv-$ICONV_VERSION $BUILD/libiconv
+cd $BUILD/libiconv/libiconv-$ICONV_VERSION
+
+echo -n "configuring iconv..."
+./configure \
+    --prefix=$ROOTFS \
+    --enable-static \
+    --disable-shared \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo - " done"
+echo 
+cd -;

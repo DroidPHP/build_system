@@ -1,0 +1,30 @@
+
+# Copyright (C) Shushant Kumar
+
+
+echo "Init build System"
+echo
+
+if [ $CC = "arm-none-linux-gnueabi-gcc" ]; then
+    GCC_VERSION=`$CC -v 2>&1 | grep 'gcc version' 2>&1`
+    echo "CC = \"$CC\" version = \"$GCC_VERSION\""
+else
+    echo "\"$CC\" not found"
+    exit
+fi
+
+if [ ! -f $BUILD ]; then
+	mkdir -p $BUILD
+fi
+
+if [ ! -f $ROOTFS ]; then
+	mkdir -p $ROOTFS
+fi
+
+if [ "$GCC_VERSION" != ""]; then
+    . repo/glibc
+    ## we will replace $SYSROOT/include with $CC_SYSROOT to avoiding
+    ## any missing header file issue
+    rm -R $SYSROOT/include
+    cp -R $CC_SYSROOT $SYSROOT
+fi

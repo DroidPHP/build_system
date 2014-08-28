@@ -1,0 +1,24 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://ftp.gnu.org/gnu/libc/glibc-2.19.tar.gz" | \
+    tar -zx >> "$DIR/install.log" 2>&1
+mv glibc-xx $BUILD/glibc
+cd $BUILD/glibc/glibc-2.19
+mkdir build && cd build
+
+## configure
+echo "configuring Glibc..."
+../configure \
+    --host=$CC \
+    --disable-build-nscd \
+    --enable-add-ons \
+    --prefix=$SYSROOT \
+    --enable-static-nss \
+    --with-tls \
+    --with-ports="nptl, ports" >> "$DIR/install.log" > 2>&1
+echo -n " compiling ..."
+(make && make install) >> "$DIR/install.log" > 2&1
+echo -n " done"
+echo 
+cd -;

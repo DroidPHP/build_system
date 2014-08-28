@@ -1,0 +1,23 @@
+
+# Copyright (C) Shushant Kumar
+
+## NOTE: add --without-ssl if you have difficulty in compiling
+
+download_file "http://curl.haxx.se/download/curl-$CURL_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv curl-$CURL_VERSION $BUILD/curl
+cd $BUILD/curl/curl-$CURL_VERSION
+
+echo -n " configuring cURL..."
+./configure \
+    --prefix=$ROOTFS \
+    --disable-shared \
+    --enable-static \
+    --enable-zlib \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

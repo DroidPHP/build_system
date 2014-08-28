@@ -1,0 +1,21 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "ftp://xmlsoft.org/libxml2/libxml2-git-snapshot.tar.gz" | tar -zx >> "./install.log" 2>&1
+mv libxml2-2.9.1 $BUILD/libxml2
+cd $BUILD/libxml2/libxml2-2.9.1
+
+echo "configuring libxml..."
+./configure --prefix=$PROJ_ROOTFS \
+    --with-readline=$PROJ_ROOTFS \
+    --with-iconv=$PROJ_ROOTFS \
+    --with-zlib=$PROJ_ROOTFS \
+    --without-python \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

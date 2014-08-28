@@ -1,0 +1,20 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPE_VERSION.tar.gz" | \
+    tar -zx >> "$DIR/install.log" 2>&1
+
+mv freetype-$FREETYPE_VERSION $BUILD/freetype
+cd $BUILD/freetype/freetype-$FREETYPE_VERSION
+
+echo -n " configuring freetype..."
+./configure \
+    --prefix=$ROOTFS \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " installing"
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

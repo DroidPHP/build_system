@@ -1,0 +1,26 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "ftp://invisible-island.net/ncurses/ncurses-$NCURSES_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv ncurses-$NCURSES_VERSION $BUILD/ncurses
+cd $BUILD/ncurses/ncurses-$NCURSES_VERSION
+
+echo "configuring ncurses..."
+./configure \
+    --prefix=$ROOTFS \
+    --disable-widec \
+    --disable-ext-funcs \
+    --without-cxx-binding \
+    --without-cxx \
+    --without-shared \
+    --without-ada \
+    --without-tests \
+    --without-debug \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n "done"
+echo 
+cd -;

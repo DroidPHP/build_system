@@ -1,0 +1,40 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-$LIGHTTPD_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv lighttpd-$LIGHTTPD_VERSION $BUILD/lighttpd
+cd $BUILD/lighttpd/lighttpd-$LIGHTTPD_VERSION
+
+export CROSS_COMPILING=yes
+export PCRECONFIG=$ROOTFS/bin/pcre-config
+export CFLAGS="-DLIGHTTPD_STATIC -I$ROOTFS/include "
+export LDFLAGS="-L$ROOTFS/lib"
+#export LUA_LIBS="-L$ROOTFS/lib"
+#export LUA_CFLAGS="-I$ROOTFS/include"
+
+## patch the lighttpd build system
+patch -p1 < $DIR/patch/lighttpd_embedded_arm_support.diff
+
+echo -n "configuring lighttpd..."
+LIBS="-lpcre -lz -ldl" ./configure \
+    --prefix="$ROOTFS/lighttpd" \
+    --disable-shared \
+    --enable-static \
+    --with-openssl="$ROOTFS/usr" \
+    --with-libiconv=$ROOTFS \
+    --disable-rpath \
+    --with-pcre \
+    --with-sysroot=$SYSROOT \
+    --with-zlib \
+    --without-bzip2 \
+    --without-lua \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make CC="arm-none-linux-gnueabi-gcc -static --sysroot=$SYSROOT" \
+CXX="arm-none-linux-gnueabi-g++ -static --sysroot=$SYSROOT"
+make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

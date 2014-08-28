@@ -1,0 +1,20 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://prdownloads.sourceforge.net/libpng/libpng-$PNG_VERSION.tar.gz?download" | tar -zx >> "$DIR/install.log" 2>&1
+mv libpng-$PNG_VERSION $BUILD/libpng
+cd $BUILD/libpng/libpng-$PNG_VERSION
+
+CPPFLAGS+="-mfpu=neon"
+
+echo -n "configuring ..."
+./configure \
+    --prefix=$PROJ_ROOTFS \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n "done"
+echo 
+cd -;

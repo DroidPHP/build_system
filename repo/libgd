@@ -1,0 +1,25 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://download.savannah.gnu.org/releases/freetype/freetype-$FREETYPE_VERSION.tar.gz" | \
+    tar -zx >> "$DIR/install.log" 2>&1
+
+mv freetype-$FREETYPE_VERSION $BUILD/freetype
+cd $BUILD/freetype/freetype-$FREETYPE_VERSION
+
+# ERROR: issue on compiling
+
+ ./configure --prefix=$ROOTFS \
+                --host=$HOST \
+                --with-sysroot=$SYSROOT_GLIBC \
+                --with-zlib="$ROOTFS" \
+                --with-libiconv-prefix="$ROOTFS" \
+                --with-png="$ROOTFS" \
+                --without-freetype \
+                --without-fontconfig \
+                --with-jpeg="$ROOTFS" \
+                --without-xpm \
+                --without-vpx \
+                --without-tiff \
+                --enable-static \
+                --disable-shared

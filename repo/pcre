@@ -1,0 +1,20 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-$PCRE_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv pcre-$PCRE_VERSION $BUILD/pcre
+cd $BUILD/pcre/pcre-$PCRE_VERSION
+
+echo -n "configuring pcre.."
+
+./configure \
+    --prefix=$ROOTFS \
+    --disable-cpp \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

@@ -1,0 +1,13 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://www.bzip.org/$BZIP_VERSION/bzip2-$BZIP_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv bzip2-$BZIP_VERSION $BUILD/bzip2
+cd $BUILD/bzip2/bzip2-$BZIP_VERSION
+
+echo -n " installing bz2... "
+make install PREFIX=$ROOTFS >> "$DIR/install.log" 2>&1
+
+echo -n "done"
+echo 
+cd -;

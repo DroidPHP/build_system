@@ -1,0 +1,18 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://www.ijg.org/files/jpegsrc.v9.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv jpeg-9 $BUILD/jpeg
+cd $BUILD/jpeg/jpeg-9
+
+echo -n "configuring libjpeg..."
+./configure \
+    --prefix=$PROJ_ROOTFS \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

@@ -1,0 +1,19 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://ftp.gnu.org/gnu/readline/readline-$READLINE_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv readline-$READLINE_VERSION $BUILD/readline
+cd $BUILD/readline/readline-$READLINE_VERSION
+
+echo "configuring readline..."
+./configure \
+    --prefix=$ROOTFS \
+    --with-curses=$ROOTFS \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

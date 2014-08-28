@@ -1,0 +1,23 @@
+
+# Copyright (C) Shushant Kumar
+
+export DIR=$(pwd);
+
+export BUILD=$DIR/build
+export ROOTFS=$DIR/rootfs/arm
+
+
+export CC="arm-none-linux-gnueabi-gcc"
+export CXX="arm-none-linux-gnueabi-g++"
+export RANLIB="arm-none-linux-gnueabi-ranlib"
+export STRIP='arm-none-linux-gnueabi-strip'
+export LD='arm-none-linux-gnueabi-ld'
+export AR='arm-none-linux-gnueabi-ar'
+export HOST="arm-none-linux-gnueabi"
+
+export CC_SYSROOT="$HOME/CodeSourcery/Sourcery_CodeBench_Lite_for_ARM_GNU_Linux/arm-none-linux-gnueabi/libc"
+export SYSROOT="$DIR/sysroot/arm"
+export SYSROOT="$HOME/droidphp/sysroot/armv5"
+export CFLAGS="-O2 -static --sysroot=$SYSROOT -I$ROOTFS/include -I$ROOTFS/usr/include"
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="-L$ROOTFS/lib -L$ROOTFS/usr/lib"

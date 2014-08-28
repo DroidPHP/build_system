@@ -1,0 +1,29 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://downloads.sourceforge.net/project/msmtp/msmtp/1.4.32/msmtp-1.4.32.tar.bz2?download" | tar -zjx >> "$DIR/install.log" 2>&1
+mv msmtp-1.4.31 $BUILD/mmstp
+cd $BUILD/msmtp/msmtp-1.4.31
+
+
+
+echo -n "configuring msmtp..."
+
+ac_cv_sys_file_offset_bits=unknown \
+libssl_CFLAGS="-I$ROOTFS/usr/include" \
+libssl_LDFLAGS="-L$ROOTFS/usr/lib" \
+libssl_LIBS="-lssl -lcrypto" LIBS="-ldl" ./configure \
+     --prefix=$PROJ_ROOTFS/msmstp \
+     --host=$HOST \
+     --with-libiconv-prefix=$PROJ_ROOTFS \
+     --with-ssl=openssl >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make CFLAGS="-static" \
+    CC="arm-none-linux-gnueabi-gcc --sysroot=$SYSROOT" \
+    CPP="arm-none-linux-gnueabi-g++ --sysroot=$SYSROOT" \
+    && make install) >> "$DIR/install.log" 2>&1
+
+echo -n " done"
+echo 
+cd -;

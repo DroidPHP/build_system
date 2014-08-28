@@ -1,0 +1,35 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://sourceforge.net/projects/mcrypt/files/Libmcrypt/2.5.8/libmcrypt-2.5.8.tar.gz/download" | tar -zx >> "./install.log" 2>&1
+mv libmcrypt-2.5.8 $BUILD/libmcrypt
+cd $BUILD/libmcrypt/libmcrypt-2.5.8
+
+export ac_cv_type_unsigned_long_int=no
+export ac_cv_sizeof_unsigned_int=no
+export ac_cv_sizeof_unsigned_short_int=no
+export ac_cv_sizeof_unsigned_char=no
+
+export ac_cv_func_malloc_0_nonnull=yes
+export ac_cv_func_realloc_0_nonnull=yes
+
+echo -n "configuring libmcrypt..."
+./configure \
+    --prefix=$ROOTFS \
+    --enable-static \
+    --disable-shared \
+    --with-mhash \
+    --host=$HOST << "$DIR/install.log" 2>&1
+    
+# hack to bypass Cannot find a 32,16 bit integer in your system
+
+sed -i "s{SIZEOF_UNSIGNED_CHAR no{SIZEOF_UNSIGNED_CHAR 1{" config.h
+sed -i "s{SIZEOF_UNSIGNED_INT no{SIZEOF_UNSIGNED_INT 4{" config.h
+sed -i "s{SIZEOF_UNSIGNED_LONG_INT 0{SIZEOF_UNSIGNED_LONG_INT 4{" config.h
+sed -i "s{SIZEOF_UNSIGNED_SHORT_INT no{SIZEOF_UNSIGNED_SHORT_INT 2{" config.h
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+echo -n " done"
+echo 
+cd -;

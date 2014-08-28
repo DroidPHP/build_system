@@ -1,0 +1,18 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://zlib.net/zlib-$ZLIB_VERSION.tar.gz" | tar -zx >> "$DIR/install.log" 2>&1
+mv zlib-$ZLIB_VERSION $BUILD/zlib >> /dev/null 2>&1
+cd $BUILD/zlib/zlib-$ZLIB_VERSION
+
+echo -n "configuring zlib..."
+./configure \
+    --prefix="$ROOTFS" \
+    --static >> "$DIR/install.log" 2>&1
+    
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo -n "done "
+echo
+cd -;

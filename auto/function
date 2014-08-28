@@ -1,0 +1,27 @@
+
+# Copyright (C) Shushant Kumar
+
+#Needed to use aliases
+shopt -s expand_aliases
+type wget >> "./install.log" 2>&1
+if [ $? -eq 0 ]; then
+	alias download_file="wget --no-check-certificate -q -O -"
+else
+	type curl >> "./install.log" 2>&1
+	if [ $? -eq 0 ]; then
+		alias download_file="curl --insecure --silent --location"
+	else
+		echo "error, curl or wget not found"
+	fi
+fi
+
+function extract(){
+	if [ -f $1 ]; then
+		case $1 in
+			*.tar.gz) tar xvzf $1 && cd $(basename "$1" .tar.gz) ;;
+            *.tar.bz2) tar xvjf $1 && cd $(basename "$1" .tar.bz2) ;;
+        esac
+    else
+    	echo "unable to extract \"$1\""
+    fi
+}

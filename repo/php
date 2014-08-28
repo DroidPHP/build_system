@@ -1,0 +1,74 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://www.php.net/get/php-$PHP_VERSION.tar.gz/from/a/mirror" | tar -zx >> "$DIR/install.log" 2>&1
+mv php-$PHP_VERSION $BUILD/php
+cd $BUILD/php/php-$PHP_VERSION
+
+echo -n "configuring PHP..."
+./configure \
+    --prefix=$ROOTFS/php \
+    --enable-static \
+    --disable-all \
+    --enable-filter \
+    --enable-calendar \
+    --enable-ctype \
+    --enable-dom \
+    --enable-exif \
+    --enable-fileinfo \
+    --enable-ftp \
+    --with-mhash=$ROOTFS/usr \
+    --disable-intl \
+    --disable-phar \
+    --enable-posix \
+    --enable-shmop \
+    --enable-simplexml \
+    --enable-sysvmsg \
+    --enable-sysvsem \
+    --enable-tokenizer \
+    --disable-wddx \
+    --enable-xmlreader \
+    --enable-xmlwriter \
+    --enable-opcache=no \
+    --enable-pcntl \
+    --enable-soap \
+    --enable-cgi \
+    --enable-json \
+    --with-zlib \
+    --enable-zip \
+    --with-mysql \
+    --enable-mysqlnd \
+    --with-mysqli=mysqlnd \
+    --enable-pdo \
+    --with-pdo-mysql=mysqlnd \
+    --enable-libxml \
+    --with-pdo-sqlite \
+    --with-sqlite3 \
+    --enable-sockets \
+    --enable-bcmath \
+    --enable-mbstring \
+    --enable-mbregex \
+    --enable-session \
+    --with-zlib-dir=$ROOTFS \
+    --with-libxml-dir=$ROOTFS \
+    --with-curl=$ROOTFS \
+    --with-openssl=$ROOTFS \
+    --with-jpeg-dir=$ROOTFS \
+    --with-png-dir=$ROOTFS \
+    --with-freetype-dir=$ROOTFS \
+    --with-iconv-dir=$ROOTFS \
+    --with-mcrypt=$ROOTFS \
+    --host=$HOST >> "$DIR/install.log" 2>&1
+
+## hack
+
+mv ext/mysqlnd/config9.m4 ext/mysqlnd/config.m4
+sed -ie "s{ext/mysqlnd/php_mysqlnd_config.h{config.h{" ext/mysqlnd/mysqlnd_portability.h
+sed -i 's/-export-dynamic/-all-static/g' Makefile
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+
+echo "done"
+echo 
+cd -;

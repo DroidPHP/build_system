@@ -1,0 +1,42 @@
+#!/bin/sh
+
+. ./conf
+
+echo "CC: $CC"
+echo "SYSROOT: $SYSROOT"
+echo "CFLAGS: $CFLAGS"
+echo "CXXFLAGS: $CXXFLAGS"
+echo "LDFLAGS: $LDFLAGS"
+
+# BOOTSTRAPING
+. ./version
+. auto/init
+. auto/function
+
+# BUILD LIBRARY
+set -x
+. repo/zlib
+. repo/bzip
+. repo/openssl
+. repo/iconv
+. repo/ncurses
+. repo/pcre
+. repo/libpng
+. repo/libjpeg
+. repo/readline
+. repo/libxml
+. repo/freetype
+#
+. repo/mhash
+. repo/libmcrypt
+
+# ERRROR
+#. repo/libgd
+
+
+# BUILD EXECUTABLES
+. repo/php
+. repo/lighttpd
+. repo/msmtp
+
+# PACKAGING

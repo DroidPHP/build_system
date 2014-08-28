@@ -1,0 +1,22 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "http://downloads.sourceforge.net/project/mhash/mhash/0.9.9.9/mhash-0.9.9.9.tar.bz2" | tar -zx >> "$DIR/install.log" 2>&1
+mv mhash-0.9.9.9 $BUILD/mhash
+cd $BUILD/mhash/mhash-0.9.9.9.9
+
+export ac_cv_func_malloc_0_nonnull=yes
+
+echo "configuring mhash..."
+
+./configure \
+    --prefix=$ROOTFS \
+    --disable-shared \
+    --enable-static \
+    --host=$HOST >> "$DIR/install.log" > 2>&1
+
+echo -n " compiling..."
+(make && make install) >> "$DIR/install.log" 2>&1
+echo -n " done"
+echo 
+cd -;

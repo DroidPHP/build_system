@@ -1,0 +1,24 @@
+
+# Copyright (C) Shushant Kumar
+
+download_file "https://www.openssl.org/source/openssl-$OPENSSL_VERSION.tar.gz" | \
+    tar -zx >> "$DIR/install.log" 2>&1
+mv openssl-$OPENSSL_VERSION $BUILD/openssl
+cd $BUILD/openssl/openssl-$OPENSSL_VERSION
+
+OPENSSL_TARGET="linux-armv4"
+
+echo -n "configuring openssl..."
+./Configure \
+    $OPENSSL_TARGET no-shared \
+    --prefix="/usr" \
+    --openssldir=$ROOTFS \
+    --with-zlib-lib="$ROOTFS/lib" \
+    --with-zlib-include="$ROOTFS/include" >> "$DIR/install.log" 2>&1
+
+echo -n " compiling..."
+(make && make INSTALL_PREFIX="$ROOTFS" install) >> "$DIR/install.log" 2>&1
+
+echo -n "done"
+echo 
+cd -;
